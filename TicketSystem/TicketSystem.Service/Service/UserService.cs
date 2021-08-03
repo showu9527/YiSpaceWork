@@ -1,4 +1,5 @@
 ﻿using System;
+using TicketSystem.Common.Enum;
 using TicketSystem.DataAccess.Interface;
 using TicketSystem.DataAccess.Model;
 using TicketSystem.Service.Interface;
@@ -24,7 +25,15 @@ namespace TicketSystem.Service.Service
             var user = _userRepository.GetUser(request.Account, request.Account);
             if (user == null)
             {
-                throw new Exception("No user");
+                //TEST CODE
+                user = new UserModel
+                {
+                    Id = 1,
+                    Account = "test",
+                    Name = "testName",
+                    Role = RoleEnum.QA
+                };
+                //throw new Exception("No user");
             }
 
             var jwtToken = _jwtSettings.CreateToken(user);

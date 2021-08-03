@@ -12,8 +12,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using TicketSystem.Common.Auth;
+using TicketSystem.Common.Swagger;
 using TicketSystem.Service.Service;
 
 namespace TicketSystem
@@ -31,13 +37,13 @@ namespace TicketSystem
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(new JwtSettings(Configuration["Jwt:Key"], Configuration["Jwt:Issuer"]));
-            services.AddControllers();
-            services.AddSwaggerGen(c =>
+            services.AddControllers(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TicketSystem API", Version = "v1" });
-                c.IncludeXmlComments(XmlCommentsFilePath);
             });
-            
+
+
+            services.AddAuth(Configuration);
+            services.AddSwagger();
         }
 
         
@@ -45,22 +51,23 @@ namespace TicketSystem
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseSwagger();
-
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", " TicketSystem API");
-            });
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", " TicketSystem API V1");
+                });
             }
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

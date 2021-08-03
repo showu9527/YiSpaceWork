@@ -12,7 +12,7 @@ namespace TicketSystem.DataAccess.Repository
 
         public UserModel GetUser(string account, string password)
         {
-            throw new System.NotImplementedException();
+            return null;
         }
     }
 }

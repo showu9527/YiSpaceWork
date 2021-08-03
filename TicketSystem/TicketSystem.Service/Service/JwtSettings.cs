@@ -35,6 +35,7 @@ namespace TicketSystem.Service.Service
                 new Claim("Account", user.Account),
             };
             var securityToken = new JwtSecurityToken(
+                issuer: _issuer,
                 claims: claims,
                 expires: DateTime.UtcNow.Add(_expired),
                 signingCredentials: _credentials);

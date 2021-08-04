@@ -11,7 +11,7 @@ namespace TicketSystem.Common.Model
 
         public string Title { get; set; }
 
-        public string Creater { get; set; }
+        public string Creator { get; set; }
 
         public string Assigned { get; set; }
 
